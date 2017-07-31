@@ -1,0 +1,43 @@
+diff --git a/./authorized_keys.patch b/./authorized_keys.patch
+new file mode 100644
+index 0000000..69f5aad
+--- /dev/null
++++ b/./authorized_keys.patch
+@@ -0,0 +1,17 @@
++? authorized_keys.patch
++Index: auth2-pubkey.c
++===================================================================
++RCS file: /cvs/src/usr.bin/ssh/auth2-pubkey.c,v
++retrieving revision 1.68
++diff -r1.68 auth2-pubkey.c
++371a372,377
++> #ifdef HAVE_CYGWIN
++> #define ROOT_OR_SYSTEM_UID 18
++> #else
++> #define ROOT_OR_SYSTEM_UID 0
++> #endif
++>
++406c412
++< 	if (auth_secure_path(av[0], &st, NULL, 0,
++---
++> 	if (auth_secure_path(av[0], &st, NULL, ROOT_OR_SYSTEM_UID,
+diff --git a/../openssh-7.4p1-1.src/openssh.cygport b/./openssh.cygport
+index 756d118..1c95f94 100644
+--- a/../openssh-7.4p1-1.src/openssh.cygport
++++ b/./openssh.cygport
+@@ -1,6 +1,6 @@
+ NAME="openssh"
+ VERSION="7.4p1"
+-RELEASE=1
++RELEASE=2
+ CATEGORY="Net"
+ REQUIRES="csih cygrunsrv diffutils"
+ SUMMARY="The OpenSSH server and client programs"
+@@ -10,6 +10,7 @@ DESCRIPTION="OpenSSH is a program for logging into a remote machine and for
+ HOMEPAGE="http://www.openssh.com/"
+ SRC_URI="http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-${VERSION}.tar.gz
+          http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-${VERSION}.tar.gz.asc"
++PATCH_URI="authorized_keys.patch"
+ 
+ CYGCONF_ARGS="--libexecdir=/usr/sbin \
+ 	      --with-kerberos5=/usr \
